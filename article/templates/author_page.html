@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2>
+        Риелтор: {{ author_s.name }}
+    </h2>
+    {% if author_s.author_image %}
+            <p>
+                <img class="thumbnail" width="200" src="{{ author_s.author_image.url }}">
+            </p>
+        {% endif %}
+    {% for article in articles %}
+        <div class="column">
+            {% if article.article_image %}
+                <p>
+                    <img class="thumbnail" width="200" src="{{ article.article_image.url }}">
+                </p>
+            {% endif %}
+            <ul class="right">
+                <h4>
+                    Категория: {{ article.article_category }}
+                </h4>
+            </ul>
+            <h6>
+                Дата публикации: {{ article.article_date }}
+            </h6>
+            <h4>
+                <a href="/articles/get/{{ article.id }}/">
+                    {{ article.article_title }}
+                </a>
+            </h4>
+            <p>
+                {% autoescape off %}
+                   {{ article.article_text_min }}
+                {% endautoescape %}
+
+            </p>
+        </div>
+
+    {% endfor %}
+{% endblock content %}

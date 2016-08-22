@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% load embed_video_tags %}
+{% load mptt_tags %}
+{% load i18n mptt_tags %}
+{% load staticfiles %}
+
+{% block article %}
+    {%  for home in homes %}
+        <h4>
+            {{ home.home_title }}
+        </h4>
+        <div>
+            {% if home.home_image %}
+                <p>
+                    <img class="thumbnail" src="{{ home.home_image.url }}">
+                </p>
+            {% endif %}
+        </div>
+        <p>
+            {% autoescape off %}
+                {{ home.home_text }}
+            {% endautoescape %}
+        </p>
+        {% if home.home_video %}
+            <iframe width="560" height="315" src="{{ home.home_video }}" frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+    {% endfor %}
+{%  endblock %}

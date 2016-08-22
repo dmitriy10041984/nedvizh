@@ -1,0 +1,135 @@
+﻿{% load staticfiles %}
+{% load bootstrap3 %}
+{% load mptt_tags %}
+{% load i18n mptt_tags %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Django </title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+
+        {% bootstrap_css %}
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    {% if 'javascript_in_head'|bootstrap_setting %}{% bootstrap_javascript jquery=True %}{% endif %}
+    {% block bootstrap3_extra_head %}{% endblock %}
+    <link href="{% static 'css/mystyle.css' %}" rel="stylesheet">
+    <title>{% block title %}{% endblock %} - &ndash; Blog</title>
+
+
+    </head>
+    <body>
+        <div class="container-fluid">
+            <header class="row">
+			    <div class="col-sm-3 logo"><img src="../images/logo.png" alt="The Landon Hotel. "></div>
+			    <div class="col-sm-9 tagline">You'll feel at home in our neighborhood</div>
+		    </header>
+            <div class="row">
+                <nav class="navbar navbar-inverse navbar-fixed-top">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="{% url 'home' %}">Главная</a>
+                         </div>
+                         <div id="navbar" class="collapse navbar-collapse">
+                               <ul class="nav navbar-nav">
+                                   <li class="active"><a href="{% url '/' %}">Блог</a></li>
+                                   <li><a href="/admin/">АДМИН</a></li>
+                                   <li>
+                                       {% if username %}
+                                           <a href="/auth/logout/">Выйти ({{ username }})</a>
+                                       {% else %}
+                                           <a href="/auth/login/">Войти</a>
+                                       {% endif %}
+                                   </li>
+                                   <li class="float-right">
+                                       <form class="form-inline" action="/keyword/" method="post">
+                                           {% csrf_token %}
+                                           {% bootstrap_form form_keywords %}
+                                           {% buttons submit='Найти' reset='Отмена' %}
+                                           {% endbuttons %}
+                                       </form>
+                                   </li>
+                               </ul>
+                         </div><!--/.nav-collapse -->
+                    </div>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        <h4>КАТЕГОРИИ НЕДВИЖИМОСТИ</h4>
+                        <ul>
+                            {% recursetree projects %}
+                                <li>
+                                    <a  href="/category/get/{{ node.id }}/" title="{% blocktrans with project=node %}Show all entries in {{ project }}{% endblocktrans %}">
+                                        {{ node }}
+                                    </a>
+                                    {% if not node.is_leaf_node %}
+                                        <ul class="project-children project-{{ node.slug }}">
+                                            {{ children }}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            {% endrecursetree %}
+                            {% if not projects %}
+                                <li>
+                                    {% trans "No projects yet." %}
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        {% block bootstrap3_content %}
+                            {% bootstrap_messages %}
+                        {% endblock bootstrap3_content %}
+                        {% block article %}{% endblock %}
+                        {% block login %}{% endblock %}
+                    </div>
+                    <div class="col-md-2">
+                        Облако тегов:
+                         {% for cloudteg in cloudtegs %}
+                             <a class="fones-text" href="/cloudteg/{{ cloudteg.id }}">
+                                 {{ cloudteg }}
+                             </a>
+                             {% if not forloop.last %}, {% endif %}
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><a href="#">Связаться с нами</a></li>
+                            <li>Тел: (066)290 40 92</li>
+                            <li>....наша почта: kuzmakuzin@mail.net</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li>Copyright © 2016 Kuzma-Kuzin</li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+
+    {% if not 'javascript_in_head'|bootstrap_setting %}{% bootstrap_javascript jquery=True %}{% endif %}
+    {% block bootstrap3_extra_script %}{% endblock %}
+    </body>
+</html>

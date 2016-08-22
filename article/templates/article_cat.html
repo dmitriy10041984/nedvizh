@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+{% load embed_video_tags %}
+{% load staticfiles %}
+{% load i18n mptt_tags %}
+
+{% block article %}
+    <h4>Категория: {{ category }}</h4>
+
+    <div class="large-8 columns">
+        {% for article in category_articles %}
+            <div class="column">
+                <h6>
+                    Риелтор:
+                    <a href="/author/{{ article.article_author.id }}/">
+                        {{ article.article_author }}
+                    </a>
+                </h6>
+                <h6>
+                    Добавлено:
+                        {{ article.article_date }}
+                </h6>
+                <h4>
+                    <a href="/articles/get/{{ article.id }}/">
+                        {{ article.article_title }}
+                    </a>
+                </h4>
+                {% if article.article_image %}
+                    <div>
+                        <img class="thumbnail" src="{{ article.article_image.url }}">
+                    </div>
+                {% endif %}
+                {% if article.article_image %}
+                    <div>
+                        <img class="thumbnail" src="{{ article.article_image.url }}">
+                    </div>
+                {% endif %}
+                <p>
+                    <a href="/articles/addlike/{{ article.id }}/"><img src="{% static "images.jpg" %}" width="25px" height="25px">
+                    </a>
+                    {{ article.article_likes }}
+                </p>
+                <p>
+                {% autoescape off%}
+                    {{ article.article_text_min}}
+                {% endautoescape %}
+           </p>
+                <hr>
+            </div>
+        {% endfor %}
+
+
+
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+
+
+{% block content %}
+
+    <h3>
+        По запросу - {{ key_name }}:
+    </h3>
+    {% for article in articles %}
+        <h6>Дата публикации:{{ article.article_date }}</h6>
+        <h4><a href="/articles/get/{{ article.id }}/">{{ article.article_title }}</a></h4>
+    {% endfor %}
+
+{%  endblock content %}
